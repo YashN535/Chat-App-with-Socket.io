@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile</title>
+  </head>
+  <body>
+    <h1>Welcome, <span id="username"></span>!</h1>
+
+    <img
+      id="profile-pic-display"
+      src="uploads/default-profile-pic.png"
+      alt="Your Profile Picture"
+      width="150"
+      height="150"
+    />
+
+    <form id="profile-pic-form-profile" enctype="multipart/form-data">
+      <input
+        type="file"
+        id="profile-pic-input-profile"
+        name="profilePic"
+        accept="image/*"
+      />
+      <button type="submit">Upload Profile Picture</button>
+    </form>
+
+    <script src="./js/profile.js"></script>
+  </body>
+</html>

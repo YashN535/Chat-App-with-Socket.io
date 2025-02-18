@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enter OTP - Chat App</title>
+    <link rel="stylesheet" href="style.css" />
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Retrieve the identifier from localStorage
+        const identifier = localStorage.getItem("identifier");
+        if (!identifier) {
+          alert("No identifier found. Please login again.");
+          window.location.href = "signin.html";
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div class="auth-container">
+      <h2>Enter OTP</h2>
+      <form id="otp-form">
+        <input type="text" id="otp" placeholder="Enter OTP" required />
+        <button type="submit">Verify OTP</button>
+      </form>
+      <p id="otp-message"></p>
+    </div>
+
+    <script>
+      document
+        .getElementById("otp-form")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const otp = document.getElementById("otp").value;
+          const identifier = localStorage.getItem("identifier");
+
+          if (!identifier) {
+            document.getElementById("otp-message").innerText =
+              "No identifier found. Please login again.";
+            return;
+          }
+
+          try {
+            const response = await fetch(
+              "http://localhost:4000/api/verify-otp",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: identifier, otp }),
+              }
+            );
+            const data = await response.json();
+
+            if (response.ok && data.token) {
+              localStorage.setItem("token", data.token); // Store the token
+              document.getElementById("otp-message").innerText =
+                "OTP verified successfully! Logging in...";
+              setTimeout(() => {
+                window.location.href = "home.html";
+              }, 1000);
+            } else {
+              document.getElementById("otp-message").innerText =
+                data.message || "OTP verification failed!";
+            }
+          } catch (error) {
+            console.error("Error verifying OTP:", error);
+            document.getElementById("otp-message").innerText =
+              "Error processing request!";
+          }
+        });
+    </script>
+  </body>
+</html>

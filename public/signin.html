@@ -1,0 +1,185 @@
+<!-- signin.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Chat App</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      /* Basic styling for tabs */
+      .tab {
+        display: none;
+      }
+      .tab.active {
+        display: block;
+      }
+      .tab-buttons {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 20px;
+      }
+      .tab-buttons button {
+        padding: 10px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="auth-container">
+      <h2>Login</h2>
+      <div class="tab-buttons">
+        <button onclick="showTab('password-tab')">Username/Password</button>
+        <button onclick="showTab('otp-tab')">OTP</button>
+      </div>
+      <!-- Username/Password Login Form -->
+      <div id="password-tab" class="tab active">
+        <form id="password-form">
+          <!-- Input labeled "Username" but will be sent as "identifier" -->
+          <input type="text" id="username" placeholder="Username" required />
+          <input
+            type="password"
+            id="password"
+            placeholder="Password"
+            required
+          />
+          <button type="submit">Login</button>
+        </form>
+      </div>
+      <!-- OTP Login Form -->
+      <div id="otp-tab" class="tab">
+        <form id="otp-request-form">
+          <input type="text" id="otp-identifier" placeholder="Email" required />
+          <button type="submit">Send OTP</button>
+        </form>
+        <form id="otp-verify-form" style="display: none">
+          <input type="text" id="otp-code" placeholder="Enter OTP" required />
+          <button type="submit">Verify OTP</button>
+        </form>
+      </div>
+      <p id="signin-message"></p>
+      <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+    </div>
+
+    <script>
+      function showTab(tabId) {
+        document.querySelectorAll(".tab").forEach((tab) => {
+          tab.classList.remove("active");
+        });
+        document.getElementById(tabId).classList.add("active");
+      }
+
+      // Handle Username/Password Login
+      document
+        .getElementById("password-form")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+          // Retrieve username and password values.
+          const identifier = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
+
+          try {
+            const response = await fetch("http://localhost:4000/api/signin", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ identifier, password }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              console.log("Sign-in successful:", data);
+              document.getElementById("signin-message").innerText =
+                "Sign-in successful!";
+              localStorage.setItem("token", data.token);
+              sessionStorage.setItem("identifier", identifier);
+              setTimeout(() => {
+                window.location.href = "/home.html";
+              }, 1000);
+            } else {
+              console.log("Error:", data);
+              document.getElementById("signin-message").innerText =
+                data.message || "Invalid credentials!";
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            document.getElementById("signin-message").innerText =
+              "Error processing request!";
+          }
+        });
+
+      // Handle OTP Request
+      document
+        .getElementById("otp-request-form")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const email = document.getElementById("otp-identifier").value;
+          // Save the identifier for OTP verification
+          localStorage.setItem("identifier", email);
+          try {
+            const response = await fetch("http://localhost:4000/api/send-otp", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              document.getElementById("signin-message").innerText =
+                "OTP sent! Please check your email.";
+              document.getElementById("otp-request-form").style.display =
+                "none";
+              document.getElementById("otp-verify-form").style.display =
+                "block";
+            } else {
+              document.getElementById("signin-message").innerText =
+                data.message || "Error sending OTP!";
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            document.getElementById("signin-message").innerText =
+              "Error processing request!";
+          }
+        });
+
+      // Handle OTP Verification
+      document
+        .getElementById("otp-verify-form")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const email = localStorage.getItem("identifier");
+          const otp = document.getElementById("otp-code").value;
+
+          try {
+            const response = await fetch(
+              "http://localhost:4000/api/verify-otp",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, otp }),
+              }
+            );
+
+            const data = await response.json();
+
+            if (response.ok && data.token) {
+              localStorage.setItem("token", data.token); // Store the token
+              document.getElementById("signin-message").innerText =
+                "OTP verified! Redirecting...";
+              setTimeout(() => {
+                window.location.href = "home.html";
+              }, 1000);
+            } else {
+              document.getElementById("signin-message").innerText =
+                data.message || "Invalid OTP!";
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            document.getElementById("signin-message").innerText =
+              "Error processing request!";
+          }
+        });
+    </script>
+  </body>
+</html>

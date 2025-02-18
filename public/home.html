@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+      integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <title>Chat App</title>
+    <!-- Token Check: Only allow access if a token exists -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const token = localStorage.getItem("token");
+        console.log("Token from localStorage:", token); // Debug: Check token value
+        if (!token) {
+          window.location.href = "signin.html";
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <h1 class="title">Chat App 💬</h1>
+    <div class="main">
+      <!-- Profile Picture Section -->
+      <div class="profile">
+        <img
+          id="profile-pic"
+          src="http://localhost:4000/default-profile-pic.png"
+          alt="Profile Picture"
+          class="profile-pic"
+        />
+        <form id="profile-pic-form-home" enctype="multipart/form-data">
+          <input
+            type="file"
+            id="profile-pic-input-home"
+            name="profilePic"
+            accept="image/*"
+          />
+          <button type="submit">Upload Profile Picture</button>
+        </form>
+      </div>
+
+      <div class="name">
+        <span><i class="far fa-user"></i></span>
+        <input
+          type="text"
+          id="name-input"
+          class="name-input"
+          value="anonymous"
+          maxlength="20"
+          readonly
+        />
+      </div>
+      <div class="search">
+        <input type="text" id="search-input" placeholder="Search messages..." />
+      </div>
+
+      <ul class="message-container" id="message-container"></ul>
+
+      <form class="message-form" id="message-form">
+        <input
+          type="text"
+          name="message"
+          id="message-input"
+          class="message-input"
+          placeholder="Type your message..."
+        />
+        <div class="v-divider"></div>
+        <button id="emoji-button" type="button" title="Insert Emoji">😊</button>
+        <button id="attachment-button" type="button" title="Attachment">
+          +
+        </button>
+        <button type="submit" class="send-button">
+          Send <span><i class="fas fa-paper-plane"></i></span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Logout Button -->
+    <button id="logout-button">Logout</button>
+
+    <script>
+      document
+        .getElementById("logout-button")
+        .addEventListener("click", async () => {
+          try {
+            const response = await fetch("http://localhost:4000/auth/logout", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+            });
+            console.log("Logout request sent", response);
+            if (response.ok) {
+              console.log("Logout successful");
+              localStorage.removeItem("identifier");
+              localStorage.removeItem("token");
+              alert("You have been logged out successfully!");
+              window.location.href = "signin.html";
+            } else {
+              console.error(
+                "Logout failed",
+                response.status,
+                response.statusText
+              );
+              alert("Logout failed. Please try again.");
+            }
+          } catch (error) {
+            console.error("Error during logout:", error);
+            alert("Error during logout. Please try again.");
+          }
+        });
+    </script>
+
+    <h3 class="clients-total" id="client-total">Total clients:</h3>
+
+    <script src="http://localhost:4000/socket.io/socket.io.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.28.0/moment.min.js"
+      integrity="sha512-Q1f3TS3vSt1jQ8AwP2OuenztnLU6LwxgyyYOG1jgMW/cbEMHps/3wjvnl1P3WTrF3chJUWEoxDUEjMxDV8pujg=="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+
+    <script src="./js/contextMenu.js"></script>
+    <script src="./js/encryption.js"></script>
+    <script src="./js/ui.js"></script>
+    <script src="./js/attachments.js"></script>
+    <script src="./js/main.js"></script>
+    <script src="./js/emoji.js"></script>
+    <script src="./js/search.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@3.0.0/dist/index.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,538 @@
+/* ============================================= */
+/*            CSS Variables & Global Styles      */
+/* ============================================= */
+:root {
+  /* Colors */
+  --primary-color: #0984e3;
+  --primary-hover: #74b9ff;
+  --secondary-color: #2d3436;
+  --accent-color: #636e72;
+  --bg-gradient-start: #81ecec;
+  --bg-gradient-end: #74b9ff;
+  --main-bg: rgba(255, 255, 255, 0.9);
+  --border-color: #dfe6e9;
+  --message-bg: #dfe6e9;
+  --message-own-bg: #74b9ff;
+  --message-own-text: #fff;
+  --input-bg: #fff;
+  --input-focus-bg: #dfe6e9;
+  --blur-amount: 10px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* ============================================= */
+/*                 Typography                    */
+/* ============================================= */
+.title {
+  color: var(--secondary-color);
+  font-size: 2.5rem;
+  margin: 30px 0 20px;
+  animation: slideDown 0.5s ease-out;
+}
+
+/* ============================================= */
+/*                Containers                     */
+/* ============================================= */
+.main,
+.auth-container {
+  background: var(--main-bg);
+  backdrop-filter: blur(var(--blur-amount));
+  border-radius: 20px;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+  width: 500px;
+  max-width: 90%;
+  padding: 30px;
+  animation: fadeIn 1s ease-in-out;
+  overflow: hidden;
+}
+
+/* Auth container extra spacing */
+.auth-container {
+  padding: 40px 30px;
+  margin-top: 30px;
+}
+
+.auth-container h2 {
+  color: var(--secondary-color);
+  font-size: 2rem;
+  margin-bottom: 20px;
+  animation: slideDown 0.5s ease-out;
+}
+
+/* ============================================= */
+/*                Form & Input Styles            */
+/* ============================================= */
+input,
+button,
+label {
+  font-size: 1rem;
+  transition: background-color 0.3s, transform 0.1s;
+}
+
+/* Shared button styles */
+button,
+#profile-pic-form-home button,
+#profile-pic-form-home label,
+#profile-pic-input-home,
+.send-button,
+#logout-button,
+.auth-container form button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  text-align: center;
+  margin-top: 10px; 
+  margin-left: 5px;
+  margin-bottom: 10px;
+}
+
+button:hover,
+#profile-pic-form-home button:hover,
+#profile-pic-form-home label:hover,
+.send-button:hover,
+#logout-button:hover,
+.auth-container form button:hover {
+  background-color: var(--primary-hover);
+}
+
+button:active,
+#profile-pic-form-home button:active,
+#profile-pic-form-home label:active,
+.send-button:active,
+#logout-button:active,
+.auth-container form button:active {
+  transform: scale(0.95);
+}
+
+/* Shared input styles */
+input[type="text"],
+input[type="password"],
+.auth-container form input,
+.message-input,
+.search input {
+  outline: none;
+  font-size: 1rem;
+  border-radius: 25px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Authentication form inputs */
+.auth-container form input {
+  width: 100%;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  border: none;
+  background: #f1f2f6;
+}
+
+.auth-container form input:focus {
+  background: var(--input-focus-bg);
+}
+
+/* ============================================= */
+/*              Profile Picture & Name           */
+/* ============================================= */
+.profile {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-pic {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+  border: 3px solid var(--primary-color);
+  animation: pulse 2s infinite;
+}
+
+/* Name Input Container */
+.name {
+  display: flex;
+  align-items: center;
+  border-radius: 25px;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  border: 2px solid var(--border-color);
+  background: var(--main-bg);
+  color: var(--secondary-color);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.name span {
+  color: var(--primary-color);
+  font-size: 1.2rem;
+}
+
+.name-input {
+  border: none;
+  outline: none;
+  width: 100%;
+  padding-left: 10px;
+  font-size: 1rem;
+  color: var(--secondary-color);
+}
+
+/* ============================================= */
+/*              Message Container                */
+/* ============================================= */
+.message-container {
+  list-style: none;
+  padding: 10px;
+  margin: 0;
+  height: 300px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* Custom scrollbar */
+.message-container::-webkit-scrollbar {
+  width: 8px;
+}
+.message-container::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+  border-radius: 4px;
+}
+
+/* ============================================= */
+/*               Chat Message Styles             */
+/* ============================================= */
+.message-container li {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 15px;
+  animation: fadeInUp 0.5s ease;
+}
+
+.message-container .message-content {
+  max-width: 70%;
+  display: flex;
+  align-items: flex-end;
+}
+
+/* Chat profile picture */
+.message-container .chat-profile-pic {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 8px;
+}
+
+/* Message bubble */
+.message-container .message {
+  background: var(--message-bg);
+  padding: 10px 15px;
+  border-radius: 20px;
+  position: relative;
+  word-wrap: break-word;
+}
+
+/* Own message styling */
+.message-container .own-message {
+  background: var(--message-own-bg);
+  color: var(--message-own-text);
+}
+
+.message-container .own-message .chat-profile-pic {
+  margin-left: 8px;
+  margin-right: 0;
+}
+
+.message-container .own-message .message {
+  background: var(--message-own-bg);
+  color: var(--message-own-text);
+}
+
+/* Alignment for messages */
+.message-container .message-left {
+  justify-content: flex-start;
+}
+
+.message-container .message-right {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  margin-left: 150px;
+
+}
+
+/* Message bubble arrow */
+.message-container .message::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 10px solid transparent;
+}
+
+.message-container .message-left .message::after {
+  left: -10px;
+  border-right-color: var(--message-bg);
+}
+
+.message-container .message-right .message::after {
+  right: -10px;
+  border-left-color: var(--message-own-bg);
+}
+
+/* Timestamp styling */
+.message-container .timestamp {
+  font-size: 0.75rem;
+  color: var(--accent-color);
+  margin-top: 5px;
+}
+
+/* ============================================= */
+/*            Message Input Form Styles          */
+/* ============================================= */
+.message-form {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.message-input {
+  flex: 1;
+  border: 1px solid var(--border-color);
+  border-radius: 25px;
+  padding: 10px 15px;
+}
+
+.message-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 10px rgba(9, 132, 227, 0.2);
+}
+
+/* Vertical divider (if needed) */
+.v-divider {
+  width: 5px;
+}
+
+/* ============================================= */
+/*                  Clients Total                */
+/* ============================================= */
+.clients-total {
+  text-align: center;
+  font-size: 1rem;
+  color: var(--secondary-color);
+  margin: 20px 0;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.clients-total span {
+  color: var(--primary-color);
+}
+
+/* ============================================= */
+/*                Authentication Form            */
+/* ============================================= */
+.auth-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-container p {
+  color: var(--secondary-color);
+  margin-top: 20px;
+  font-size: 1rem;
+}
+
+.auth-container a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.auth-container a:hover {
+  color: var(--primary-hover);
+}
+
+/* Error messages */
+#signin-message,
+#signup-message {
+  color: #d63031;
+  margin-top: 10px;
+}
+
+/* ============================================= */
+/*                   Search Bar                  */
+/* ============================================= */
+.search {
+  position: relative;
+  width: 100%;
+  max-width: 350px;
+  margin: 15px auto;
+}
+
+.search input {
+  width: 100%;
+  padding: 12px 45px; /* Extra space for the icon */
+  border-radius: 25px;
+  border: 2px solid var(--border-color);
+  background: var(--main-bg);
+  color: var(--secondary-color);
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Placeholder styling */
+.search input::placeholder {
+  color: var(--accent-color);
+  font-style: italic;
+  transition: all 0.3s ease-in-out;
+}
+
+.search input:focus {
+  border-color: var(--primary-color);
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(9, 132, 227, 0.3);
+}
+
+.search input:focus::placeholder {
+  color: transparent;
+}
+
+/* Search icon using :before on the .search container */
+.search::before {
+  content: '\f002'; /* FontAwesome search icon */
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: var(--primary-color);
+  transition: color 0.3s ease-in-out;
+}
+
+/* Change icon color when input is focused */
+.search:focus-within::before {
+  color: var(--primary-hover);
+}
+
+/* Hover effect for the search input */
+.search input:hover {
+  background: #fff;
+  border-color: var(--primary-hover);
+}
+
+/* ============================================= */
+/*                Logout Button                  */
+/* ============================================= */
+#logout-button {
+  display: block;
+  width: fit-content;
+}
+
+/* ============================================= */
+/*                   Animations                  */
+/* ============================================= */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================= */
+/*                   Utility                     */
+/* ============================================= */
+/* Highlight a selected list item */
+li.selected {
+  background-color: rgba(0, 0, 255, 0.2);
+}
+
+
+/* emoji */
+
+#emoji-button {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-right: 0px;
+  margin-left: -65px;
+  margin-bottom: 10px;
+}
+
+/*Attachment Button */
+
+.attachment-image {
+  max-width: 100px;    
+  max-height: 100px;   
+  width: auto;
+  height: auto;
+  object-fit: cover;   /* Crop if needed */
+  border-radius: 5px;  /* Optional: adds a slight rounding of the corners */
+  margin: 5px 0;
+}
+
+.attachment-video {
+  max-width: 180px;    
+  max-height: 180px;   
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 5px;
+  margin: 5px 0;
+}
