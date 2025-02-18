@@ -8,7 +8,6 @@ const cookieParser = require("cookie-parser");
 const multer = require("multer");
 const authRoutes = require("./Routes/authRoutes");
 const { authMiddleware } = require("./Controller/authController");
-const User = require("./models/user");
 const Message = require("./models/message");
 const app = express();
 const uploadDir = path.join(__dirname, "uploads");

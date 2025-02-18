@@ -40,7 +40,7 @@ exports.signup = async (req, res) => {
     const token = jwt.sign(
       { userId: user._id, username: user.username },
       SECRET_KEY,
-      { expiresIn: "15m", algorithm: "HS256" } // 15 minutes
+      { expiresIn: "1h", algorithm: "HS256" } // 15 minutes
     );
 
     // Set the token in a cookie.
@@ -96,7 +96,7 @@ exports.signin = async (req, res) => {
         profilePic: user.profilePic,
       },
       SECRET_KEY,
-      { expiresIn: "15m", algorithm: "HS256" }
+      { expiresIn: "1h", algorithm: "HS256" }
     );
 
     res.cookie("token", token, {
@@ -152,42 +152,6 @@ exports.getProfile = async (req, res) => {
     res.status(500).json({ error: "Error fetching profile" });
   }
 };
-
-// Authentication middleware to protect routes.
-// Looks for the token in the Authorization header or in cookies.
-
-// exports.authMiddleware = async (req, res, next) => {
-//   let token;
-
-//   // Try to get token from Authorization header
-//   if (
-//     req.headers.authorization &&
-//     req.headers.authorization.startsWith("Bearer ")
-//   ) {
-//     token = req.headers.authorization.split(" ")[1];
-//   }
-//   // If not in header, try cookies (set as httpOnly)
-//   else if (req.cookies && req.cookies.token) {
-//     token = req.cookies.token;
-//   }
-
-//   if (!token) {
-//     return res.status(401).json({ message: "No token provided" });
-//   }
-
-//   try {
-//     const decoded = jwt.verify(token, process.env.SECRET_KEY);
-//     // Attach user to req after fetching from DB (exclude password)
-//     req.user = await User.findById(decoded.Id).select("-password");
-//     if (!req.user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-//     next();
-//   } catch (error) {
-//     console.error("authMiddleware error:", error);
-//     res.status(401).json({ message: "Token is not valid" });
-//   }
-// };
 
 exports.sendTokenAsCookie = (res, token) => {
   const options = {
