@@ -7,6 +7,7 @@ const otpRoutes = require("./Routes/otpRoutes");
 const authRoutes = require("./Routes/authRoutes");
 const User = require("./models/user");
 const Message = require("./models/message");
+const { Server } = require("socket.io");
 
 // Connect to MongoDB
 
@@ -22,7 +23,6 @@ app.use("/api", otpRoutes);
 
 // Initialize Socket.io
 
-const { Server } = require("socket.io");
 const io = new Server(server, {
   cors: {
     origin: "*",
