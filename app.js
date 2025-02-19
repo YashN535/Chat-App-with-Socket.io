@@ -80,6 +80,7 @@ const attachmentUpload = multer({
 });
 
 // Routes
+
 app.use("/auth", authRoutes);
 
 app.get("/", (req, res) => {

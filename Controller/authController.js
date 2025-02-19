@@ -40,7 +40,7 @@ exports.signup = async (req, res) => {
     const token = jwt.sign(
       { userId: user._id, username: user.username },
       SECRET_KEY,
-      { expiresIn: "1h", algorithm: "HS256" } // 15 minutes
+      { expiresIn: "1h", algorithm: "HS256" } // 1 hour
     );
 
     // Set the token in a cookie.
@@ -159,6 +159,7 @@ exports.sendTokenAsCookie = (res, token) => {
     httpOnly: true,
   };
   // Set token in cookie so that protected routes get it automatically
+
   res.cookie("token", token, options);
 };
 

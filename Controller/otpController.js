@@ -8,6 +8,7 @@ const User = require("../models/user");
 const SECRET_KEY = process.env.SECRET_KEY;
 
 // Setup Nodemailer (for email OTP)
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -17,14 +18,14 @@ const transporter = nodemailer.createTransport({
 });
 
 // Setup Twilio (for SMS OTP)
+
 const twilioClient = twilio(
   process.env.TWILIO_SID,
   process.env.TWILIO_AUTH_TOKEN
 );
 
-/**
- * Send OTP via email or SMS.
- */
+// Send OTP via email or SMS.
+
 exports.sendOTP = async (req, res) => {
   try {
     const { email, phone } = req.body;
@@ -33,6 +34,7 @@ exports.sendOTP = async (req, res) => {
     }
 
     // Generate a 6-digit OTP using speakeasy.
+
     const otp = speakeasy.totp({
       secret: "otp123", // In production, consider a dynamic or per-user secret
       digits: 6,
@@ -40,9 +42,11 @@ exports.sendOTP = async (req, res) => {
     });
 
     // Set OTP expiry (2 minutes from now)
+
     const otpExpires = Date.now() + 2 * 60 * 1000;
 
     // Find the user (or create one if you want to allow OTP login without prior registration)
+
     let user = await User.findOne({ $or: [{ email }, { phone }] });
     if (!user) {
       user = new User({ email, phone });
@@ -52,6 +56,7 @@ exports.sendOTP = async (req, res) => {
     await user.save();
 
     // Send OTP by email if email is provided.
+
     if (email) {
       const mailOptions = {
         from: process.env.EMAIL,
@@ -64,6 +69,7 @@ exports.sendOTP = async (req, res) => {
     }
 
     // Otherwise, send OTP by SMS.
+
     if (phone) {
       await twilioClient.messages.create({
         body: `Your OTP is ${otp}. It is valid for 2 minutes.`,
@@ -78,9 +84,8 @@ exports.sendOTP = async (req, res) => {
   }
 };
 
-/**
- * Verify the OTP and log in the user.
- */
+// Verify the OTP and log in the user.
+
 exports.verifyOTP = async (req, res) => {
   try {
     const { email, phone, otp } = req.body;
@@ -91,6 +96,7 @@ exports.verifyOTP = async (req, res) => {
     }
 
     // Locate the user based on email or phone.
+
     const user = await User.findOne({ $or: [{ email }, { phone }] });
     if (!user || !user.otp || Date.now() > user.otpExpires) {
       return res.status(400).json({ message: "OTP expired or invalid" });
@@ -101,6 +107,7 @@ exports.verifyOTP = async (req, res) => {
     }
 
     // OTP is verified; generate a JWT token using the same payload key.
+
     const token = jwt.sign(
       { userId: user._id, email: user.email, phone: user.phone },
       SECRET_KEY,
@@ -108,12 +115,14 @@ exports.verifyOTP = async (req, res) => {
     );
 
     // Set the token as an HTTP-only cookie (if not already done).
+
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 15 * 60 * 1000, // 15 minutes
     });
 
     // Clear OTP fields after successful verification.
+
     user.otp = null;
     user.otpExpires = null;
     await user.save();

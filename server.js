@@ -5,6 +5,8 @@ const connectDB = require("./db");
 const PORT = process.env.PORT || 4000;
 const otpRoutes = require("./Routes/otpRoutes");
 const authRoutes = require("./Routes/authRoutes");
+const User = require("./models/user");
+const Message = require("./models/message");
 
 // Connect to MongoDB
 
@@ -31,9 +33,6 @@ const io = new Server(server, {
 // Make Socket.io accessible in routes via app locals
 
 app.set("io", io);
-
-const User = require("./models/user");
-const Message = require("./models/message"); // If needed in socket events
 
 const users = new Map(); // Map to store user data with socket IDs
 
@@ -92,4 +91,5 @@ io.on("connection", (socket) => {
 });
 
 // Start the server
+
 server.listen(PORT, () => console.log(`💬 Server running on port ${PORT}`));

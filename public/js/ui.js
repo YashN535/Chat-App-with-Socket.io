@@ -176,7 +176,6 @@
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // const response = await fetch("/messages", { credentials: "include" });
       if (response.ok) {
         const messages = await response.json();
         for (let msg of messages) {

@@ -1,7 +1,6 @@
 (function () {
-  // --------------------------------------------------
   // Global Variables
-  // --------------------------------------------------
+
   window.socket = io();
   window.messageContainer = document.getElementById("message-container");
   window.nameInput = document.getElementById("name-input");
@@ -15,9 +14,8 @@
   window.sentTempIds = new Set();
   window.selectedMessages = new Set();
 
-  // --------------------------------------------------
-  // Initialize Encryption (Prompt & Derive Key)
-  // --------------------------------------------------
+  // Initialize Encryption
+
   (async function initEncryption() {
     let passphrase = localStorage.getItem("chatPassphrase");
     if (!passphrase) {
@@ -29,12 +27,12 @@
     window.encryptionKey = await window.deriveKey(passphrase);
   })();
 
-  // --------------------------------------------------
   // Load Profile & Initialize Context Menu
-  // --------------------------------------------------
+
   window.addEventListener("DOMContentLoaded", async () => {
     try {
       // Retrieve the token from localStorage
+
       const token = localStorage.getItem("token");
 
       if (!token) {
@@ -44,6 +42,7 @@
       }
 
       // Fetch profile data using the token in the Authorization header
+
       const response = await fetch("/auth/profile", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -71,9 +70,8 @@
     }
   });
 
-  // --------------------------------------------------
   // Socket.io Listeners
-  // --------------------------------------------------
+
   window.socket.on("clients-total", (total) => {
     window.clientsTotal.innerText = `Total Clients: ${total}`;
   });
@@ -109,9 +107,8 @@
     if (messageElement) messageElement.remove();
   });
 
-  // --------------------------------------------------
   // Sending Text Messages
-  // --------------------------------------------------
+
   window.messageForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     await sendMessage();
@@ -142,9 +139,8 @@
     window.messageTone.play().catch(console.error);
   }
 
-  // --------------------------------------------------
   // Typing Feedback
-  // --------------------------------------------------
+
   window.messageInput.addEventListener("focus", () => {
     window.socket.emit("feedback", {
       feedback: `${window.username} is typing...`,

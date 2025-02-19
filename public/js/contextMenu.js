@@ -59,6 +59,7 @@ function hideContextMenu(e) {
 }
 
 // Call createContextMenu when the script loads
+
 createContextMenu();
 
 document.addEventListener("click", window.hideContextMenu);

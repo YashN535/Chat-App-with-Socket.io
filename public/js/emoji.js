@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // Initialize the Emoji Button picker (using v3.0.0, which returns the emoji string directly)
+  // Initialize the Emoji Button picker
 
   const picker = new EmojiButton({
     position: "bottom-start", // Adjust the position as needed
