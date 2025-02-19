@@ -5,7 +5,7 @@ const speakeasy = require("speakeasy");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
-const SECRET_KEY = process.env.SECRET_KEY || "your_SECRET_KEY";
+const SECRET_KEY = process.env.SECRET_KEY;
 
 // Setup Nodemailer (for email OTP)
 const transporter = nodemailer.createTransport({
@@ -34,7 +34,7 @@ exports.sendOTP = async (req, res) => {
 
     // Generate a 6-digit OTP using speakeasy.
     const otp = speakeasy.totp({
-      secret: "otp_secret", // In production, consider a dynamic or per-user secret
+      secret: "otp123", // In production, consider a dynamic or per-user secret
       digits: 6,
       encoding: "base32",
     });
@@ -100,12 +100,18 @@ exports.verifyOTP = async (req, res) => {
       return res.status(400).json({ message: "Invalid OTP" });
     }
 
-    // OTP is verified; generate a JWT token.
+    // OTP is verified; generate a JWT token using the same payload key.
     const token = jwt.sign(
-      { id: user._id, email: user.email, phone: user.phone },
+      { userId: user._id, email: user.email, phone: user.phone },
       SECRET_KEY,
       { expiresIn: "1h" }
     );
+
+    // Set the token as an HTTP-only cookie (if not already done).
+    res.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 15 * 60 * 1000, // 15 minutes
+    });
 
     // Clear OTP fields after successful verification.
     user.otp = null;
