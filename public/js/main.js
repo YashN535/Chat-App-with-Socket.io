@@ -36,7 +36,7 @@
     try {
       // Retrieve the token from localStorage
       const token = localStorage.getItem("token");
-      console.log("Token found in localStorage:", token);
+
       if (!token) {
         console.error("No token found. Redirecting to signin.html.");
         window.location.href = "signin.html";
@@ -50,11 +50,10 @@
           "Content-Type": "application/json",
         },
       });
-      console.log("Profile response status:", response.status);
 
       if (response.ok) {
         const userData = await response.json();
-        console.log("User data loaded:", userData);
+
         document.getElementById("profile-pic").src = userData.profilePic;
         window.username =
           userData.username || userData.name || userData.user || "Guest";

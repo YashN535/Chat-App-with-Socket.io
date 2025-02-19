@@ -88,7 +88,6 @@
             const data = await response.json();
 
             if (response.ok) {
-              console.log("Sign-in successful:", data);
               document.getElementById("signin-message").innerText =
                 "Sign-in successful!";
               localStorage.setItem("token", data.token);
@@ -97,7 +96,6 @@
                 window.location.href = "/home.html";
               }, 1000);
             } else {
-              console.log("Error:", data);
               document.getElementById("signin-message").innerText =
                 data.message || "Invalid credentials!";
             }

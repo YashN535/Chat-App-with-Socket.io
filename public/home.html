@@ -15,7 +15,7 @@
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const token = localStorage.getItem("token");
-        console.log("Token from localStorage:", token); // Debug: Check token value
+
         if (!token) {
           window.location.href = "signin.html";
         }
@@ -92,9 +92,8 @@
               method: "POST",
               headers: { "Content-Type": "application/json" },
             });
-            console.log("Logout request sent", response);
+
             if (response.ok) {
-              console.log("Logout successful");
               localStorage.removeItem("identifier");
               localStorage.removeItem("token");
               alert("You have been logged out successfully!");
